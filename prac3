@@ -48,6 +48,24 @@ select dbms_rowid.rowid_relative_fno(rowid) from nikovits.eladasok where szla_sz
 -- 2) block number and 3) object identifier
 select dbms_rowid.rowid_relative_fno(rowid), dbms_rowid.rowid_block_number(rowid), dbms_rowid.rowid_object(rowid) from nikovits.eladasok where szla_szam = 100;
 
+create or replace procedure get_file_and_segment is
+    fno integer;
+    bno integer;
+    ono integer;
+    fname varchar(100);
+    sname varchar(100);
+begin
+    select dbms_rowid.rowid_relative_fno(rowid), dbms_rowid.rowid_block_number(rowid), dbms_rowid.rowid_object(rowid) into fno, bno, ono from nikovits.eladasok where szla_szam = 100;
+    select file_name into fname from dba_data_files where relative_fno = fno;
+    select segment_name into sname from dba_segments where relative_fno = fno and bno between header_block and header_block+blocks;
+    
+    dbms_output.put_line(fno || ' - ' || bno || ' - ' || ono);
+    dbms_output.put_line(fname || ' - ' || sname);
+end;
+
+set serveroutput on;
+call get_file_and_segment();
+
 --6.
 --Write a PL/SQL procedure which counts and prints the number of empty blocks of a table.
 --Output format -> Empty Blocks: nnn
