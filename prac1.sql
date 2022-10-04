@@ -119,21 +119,24 @@ select owner, table_name from dba_tab_columns where column_id = 4 and data_type 
 --Write a PL/SQL procedure, which prints out the owners and names of the tables beginning with the 
 --parameter character string. 
 
-CREATE OR REPLACE PROCEDURE table_print(p_char VARCHAR2) IS
+CREATE OR REPLACE PROCEDURE table_print(p VARCHAR2) IS
     CURSOR cur
     is
-        SELECT owner FROM dba_tab_columns WHERE table_name like 'p_char%';
-    cur_owner varchar2(128);
+        SELECT distinct owner, table_name FROM dba_tab_columns WHERE substr(table_name,1,1) = p ORDER BY owner;
+    cur_owner varchar2(128) := null;
+    cur_table varchar2(128) := null;
 BEGIN
     OPEN cur;
     LOOP
-        FETCH cur into cur_owner;
+        FETCH cur into cur_owner, cur_table;
         EXIT WHEN cur%notfound;
-        DBMS_OUTPUT.PUT_LINE(cur_owner);
+        DBMS_OUTPUT.PUT_LINE(cur_owner || ' ' || cur_table);
     END LOOP;
+    CLOSE cur;
 END;
 
-set serveroutput on;
+set serveroutput on
 execute table_print('F');
 
-select distinct owner , table_name   from dba_tab_columns where table_name like 'V%';
+set serveroutput on
+execute table_print('V');
