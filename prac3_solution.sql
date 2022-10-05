@@ -15,3 +15,13 @@ END;
 --test1
 set serveroutput on
 execute empty_blocks('NIKOVITS', 'EMPLOYEES');
+
+--test2
+set serveroutput on
+execute empty_blocks('HDZSFE', 'DEPT');
+
+--PROBLEM--
+HDZSFE.EMPTY_BLOCKS ---> calling the program failed.
+100 -- ORA-01403: no data found
+--when execute check_plsql(...)
+EXECUTE check_plsql('empty_blocks(''nikovits'', ''employees'')');
