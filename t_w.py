@@ -15,6 +15,10 @@ def t_w_cross_join(tr, ts):
 def t_w_natural_join(tr, ts, vra, vsa):
     return int ( (tr * ts) / max(vra, vsa) )
 
+# cost of sort-merge
+def cost(M, BR):
+    return int (2 * BR + 2 * BR * (math.log(BR/M, M-1)) - BR)
+
 
 # inputs
 # print("T(R)/V(R,A): {sca}".format(sca=sys.argv[1]))
